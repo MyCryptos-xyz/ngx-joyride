@@ -1,4 +1,4 @@
-import { TestBed, async, tick } from '@angular/core/testing';
+import { TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { EventListenerService } from './event-listener.service';
 import { RendererFactory2 } from '@angular/core';
 import { DomRefService } from './dom.service';
@@ -21,35 +21,33 @@ describe('EventListenerService', () => {
     });
 
     describe('startListeningScrollEvents()', () => {
-        it('scrollEvent should emit when the document scrolls with next scrollTo', async(() => {
+        it('scrollEvent should emit when the document scrolls with next scrollTo', waitForAsync(() => {
             let scrollEvent;
             eventListenerService.scrollEvent.subscribe(scrollEvt => {
                 scrollEvent = scrollEvt;
             });
 
             eventListenerService.startListeningScrollEvents();
-            let resEvt = window.document.createEvent('UIEvents');
-            resEvt.initUIEvent('scroll', true, false, window, 0);
+            let resEvt = new UIEvent("scroll", {bubbles: true, cancelable: false, view: window, detail: 0});
             document.body.dispatchEvent(resEvt);
 
             expect(scrollEvent).toEqual({ scrollX: 0, scrollY: 0 });
         }));
 
-        it('scrollEvent should NOT emit if we are not listening', async(() => {
+        it('scrollEvent should NOT emit if we are not listening', waitForAsync(() => {
             let scrollEvent = null;
             eventListenerService.scrollEvent.subscribe(scrollEvt => {
                 scrollEvent = scrollEvt;
             });
 
-            let resEvt = window.document.createEvent('UIEvents');
-            resEvt.initUIEvent('scroll', true, false, window, 0);
+            let resEvt = new UIEvent("scroll", {bubbles: true, cancelable: false, view: window, detail: 0});
             document.body.dispatchEvent(resEvt);
 
             expect(scrollEvent).toEqual(null);
         }));
     });
     describe('startListeningResizeEvents', () => {
-        it('scrollEvent should emit when the document scrolls with next scrollTo', async(() => {
+        it('scrollEvent should emit when the document scrolls with next scrollTo', waitForAsync(() => {
             let resizeEvent;
             eventListenerService.resizeEvent.subscribe(resizeEvt => {
                 resizeEvent = resizeEvt;
@@ -57,21 +55,19 @@ describe('EventListenerService', () => {
 
             eventListenerService.startListeningResizeEvents();
 
-            let resEvt = window.document.createEvent('UIEvents');
-            resEvt.initUIEvent('resize', true, false, window, 0);
+            let resEvt = new UIEvent("resize", {bubbles: true, cancelable: false, view: window, detail: 0});
             window.dispatchEvent(resEvt);
 
             expect(resizeEvent).toEqual(resEvt);
         }));
 
-        it('scrollEvent should NOT emit when we are not listening', async(() => {
+        it('scrollEvent should NOT emit when we are not listening', waitForAsync(() => {
             let resizeEvent = null;
             eventListenerService.resizeEvent.subscribe(resizeEvt => {
                 resizeEvent = resizeEvt;
             });
 
-            let resEvt = window.document.createEvent('UIEvents');
-            resEvt.initUIEvent('resize', true, false, window, 0);
+            let resEvt = new UIEvent("resize", {bubbles: true, cancelable: false, view: window, detail: 0});
             window.dispatchEvent(resEvt);
 
             expect(resizeEvent).toEqual(null);
@@ -86,8 +82,7 @@ describe('EventListenerService', () => {
             });
 
             eventListenerService.startListeningScrollEvents();
-            let resEvt = window.document.createEvent('UIEvents');
-            resEvt.initUIEvent('scroll', true, false, window, 0);
+            let resEvt = new UIEvent("scroll", {bubbles: true, cancelable: false, view: window, detail: 0});
 
             document.body.dispatchEvent(resEvt);
             document.body.dispatchEvent(resEvt);
@@ -108,9 +103,7 @@ describe('EventListenerService', () => {
             });
 
             eventListenerService.startListeningResizeEvents();
-
-            let resEvt = window.document.createEvent('UIEvents');
-            resEvt.initUIEvent('resize', true, false, window, 0);
+            let resEvt = new UIEvent("resize", {bubbles: true, cancelable: false, view: window, detail: 0});
 
             window.dispatchEvent(resEvt);
             window.dispatchEvent(resEvt);

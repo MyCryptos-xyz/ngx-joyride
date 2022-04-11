@@ -105,10 +105,10 @@ export class JoyrideStepService implements IJoyrideStepService {
         this.tryShowStep(StepActionType.NEXT);
     }
 
-    private navigateToStepPage(action: StepActionType) {
+    private async navigateToStepPage(action: StepActionType) {
         let stepRoute = this.stepsContainerService.getStepRoute(action);
         if (stepRoute) {
-            this.router.navigate([stepRoute]);
+            return await this.router.navigate([stepRoute]);
         }
     }
 
@@ -120,8 +120,8 @@ export class JoyrideStepService implements IJoyrideStepService {
         });
     }
 
-    private tryShowStep(actionType: StepActionType) {
-        this.navigateToStepPage(actionType);
+    private async tryShowStep(actionType: StepActionType) {
+        await this.navigateToStepPage(actionType);
         const timeout = this.optionsService.getWaitingTime();
         const fixedHeader = this.optionsService.getFixedHeader();
         if (fixedHeader) {
@@ -153,12 +153,12 @@ export class JoyrideStepService implements IJoyrideStepService {
         this.currentStep = this.stepsContainerService.get(actionType);
 
         if (this.currentStep == null) throw new JoyrideStepDoesNotExist('');
+        this.notifyStepClicked(actionType);
         // Scroll the element to get it visible if it's in a scrollable element
         this.scrollIfElementBeyondOtherElements();
         this.backDropService.draw(this.currentStep);
         this.drawStep(this.currentStep);
         this.scrollIfStepAndTargetAreNotVisible();
-        this.notifyStepClicked(actionType);
     }
 
     private notifyStepClicked(actionType: StepActionType) {
