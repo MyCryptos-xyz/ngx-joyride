@@ -35,6 +35,7 @@ export interface IJoyrideOptionsService {
     isCounterVisible(): boolean;
     isPrevButtonVisible(): boolean;
     getCustomTexts(): ObservableCustomTexts;
+    getFixedHeader(): string;
 }
 
 @Injectable()
@@ -46,6 +47,7 @@ export class JoyrideOptionsService implements IJoyrideOptionsService {
     private showPrevButton = true;
     private stepsOrder: string[] = [];
     private firstStep: string;
+    private fixedHeader: string;
     private waitingTime: number;
     private customTexts: ObservableCustomTexts;
 
@@ -70,6 +72,7 @@ export class JoyrideOptionsService implements IJoyrideOptionsService {
             ? options.themeColor
             : this.themeColor;
         this.firstStep = options.startWith;
+        this.fixedHeader = options.fixedHeader;
         this.waitingTime =
             typeof options.waitingTime !== 'undefined'
                 ? options.waitingTime
@@ -97,6 +100,10 @@ export class JoyrideOptionsService implements IJoyrideOptionsService {
 
     getFirstStep() {
         return this.firstStep;
+    }
+
+    getFixedHeader() {
+        return this.fixedHeader;
     }
 
     getWaitingTime() {

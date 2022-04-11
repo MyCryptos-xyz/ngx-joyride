@@ -32,7 +32,7 @@ export class JoyrideStepService implements IJoyrideStepService {
     private winTopPosition: number = 0;
     private winBottomPosition: number = 0;
     private stepsObserver: ReplaySubject<JoyrideStepInfo> = new ReplaySubject<JoyrideStepInfo>();
-
+    private fixedHeaderHeight: number = 0;
     constructor(
         private readonly backDropService: JoyrideBackdropService,
         private readonly eventListener: EventListenerService,
@@ -123,7 +123,16 @@ export class JoyrideStepService implements IJoyrideStepService {
     private async tryShowStep(actionType: StepActionType) {
         await this.navigateToStepPage(actionType);
         const timeout = this.optionsService.getWaitingTime();
-        if (timeout > 100) this.backDropService.remove();
+        const fixedHeader = this.optionsService.getFixedHeader();
+        if (fixedHeader) {
+            const fixedHeaderEl = this.DOMService.getNativeDocument().body.querySelector(fixedHeader);
+            if (fixedHeaderEl) {
+                this.fixedHeaderHeight = fixedHeaderEl.getBoundingClientRect().height;
+            }
+        }
+        if (timeout > 100) {
+            this.backDropService.remove();
+        }
         setTimeout(() => {
             try {
                 this.showStep(actionType);
@@ -229,6 +238,10 @@ export class JoyrideStepService implements IJoyrideStepService {
         }
         if (this.isElementBeyondOthers() === 2) {
             this.documentService.scrollToTheBottom(this.currentStep.targetViewContainer.element);
+        }
+
+        if (this.isElementBeyondOthers() === 2 && this.documentService.isParentScrollable(this.currentStep.targetViewContainer.element)) { // Added to handle middle section & with parentscrollable
+            this.documentService.scrollIntoView(this.currentStep.targetViewContainer.element, this.currentStep.isElementOrAncestorFixed, this.fixedHeaderHeight);
         }
         if (this.isElementBeyondOthers() === 1 && this.documentService.isParentScrollable(this.currentStep.targetViewContainer.element)) {
             this.documentService.scrollIntoView(this.currentStep.targetViewContainer.element, this.currentStep.isElementOrAncestorFixed);
