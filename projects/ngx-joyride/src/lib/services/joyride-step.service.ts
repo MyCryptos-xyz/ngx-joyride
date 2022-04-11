@@ -124,13 +124,15 @@ export class JoyrideStepService implements IJoyrideStepService {
         this.navigateToStepPage(actionType);
         const timeout = this.optionsService.getWaitingTime();
         const fixedHeader = this.optionsService.getFixedHeader();
-        if(fixedHeader) {
-            const fixedHeaderEl =  this.DOMService.getNativeDocument().body.querySelector(fixedHeader);          
-            if(fixedHeaderEl) {
+        if (fixedHeader) {
+            const fixedHeaderEl = this.DOMService.getNativeDocument().body.querySelector(fixedHeader);
+            if (fixedHeaderEl) {
                 this.fixedHeaderHeight = fixedHeaderEl.getBoundingClientRect().height;
             }
         }
-        if (timeout > 100) this.backDropService.remove();
+        if (timeout > 100) {
+            this.backDropService.remove();
+        }
         setTimeout(() => {
             try {
                 this.showStep(actionType);
@@ -237,7 +239,7 @@ export class JoyrideStepService implements IJoyrideStepService {
         if (this.isElementBeyondOthers() === 2) {
             this.documentService.scrollToTheBottom(this.currentStep.targetViewContainer.element);
         }
-       
+
         if (this.isElementBeyondOthers() === 2 && this.documentService.isParentScrollable(this.currentStep.targetViewContainer.element)) { // Added to handle middle section & with parentscrollable
             this.documentService.scrollIntoView(this.currentStep.targetViewContainer.element, this.currentStep.isElementOrAncestorFixed, this.fixedHeaderHeight);
         }

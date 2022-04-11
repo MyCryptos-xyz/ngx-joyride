@@ -31,6 +31,7 @@ export interface IJoyrideOptionsService {
     isCounterVisible(): boolean;
     isPrevButtonVisible(): boolean;
     getCustomTexts(): ObservableCustomTexts;
+    getFixedHeader(): string;
 }
 
 @Injectable()

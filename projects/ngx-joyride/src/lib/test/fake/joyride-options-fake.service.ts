@@ -15,4 +15,5 @@ export class JoyrideOptionsServiceFake implements IJoyrideOptionsService {
     getFirstStep: jasmine.Spy = jasmine.createSpy('getFirstStep');
     getWaitingTime: jasmine.Spy = jasmine.createSpy('getWaitingTime');
     getCustomTexts: jasmine.Spy = jasmine.createSpy('getCustomTexts');
+    getFixedHeader: jasmine.Spy = jasmine.createSpy('getFixedHeader');
 }
